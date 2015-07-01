@@ -103,6 +103,38 @@ dftest_X  = dftest_X.drop(['date','FanDuelPts'],axis=1)
 #==============================================================================
 # %%Predict last two weeks
 #==============================================================================
+#==============================================================================
+# %% Linear Regression
+#==============================================================================
+
+from sklearn.linear_model import LinearRegression
+lr1 = LinearRegression(normalize=True)      # Normalize helps model convergence
+lr1.fit(dftrain_X,dftrain_y) 
+lr1_preds = lr1.predict(dftest_X)
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+# Performance metrics
+mean_absolute_error(dftest_y,lr1_preds)     
+np.sqrt(mean_squared_error(dftest_y,lr1_preds))
+
+#==============================================================================
+#%% Elastic Net Regression (regularized linear regression)
+#==============================================================================
+
+from sklearn.linear_model import ElasticNet
+
+el1 = ElasticNet(normalize=True)
+el1.fit(dftrain_X,dftrain_y) 
+el1_preds = el1.predict(dftest_X)
+
+# Performance metrics
+mean_absolute_error(dftest_y,el1_preds)     
+np.sqrt(mean_squared_error(dftest_y,el1_preds))
+
+
+#==============================================================================
+# %% Random Forest
+#==============================================================================
 
 from sklearn.ensemble import RandomForestRegressor
 
@@ -111,14 +143,13 @@ rf1.fit_transform(dftrain_X,dftrain_y)      # Train the model
 rf1_preds = rf1.predict(dftest_X)           # Predict against the test set
 
 # Performance metrics
-from sklearn.metrics import mean_absolute_error, mean_squared_error
 mean_absolute_error(dftest_y,rf1_preds)     
 np.sqrt(mean_squared_error(dftest_y,rf1_preds))
 
 #%% Plot model results
 dfplot = pd.merge(dftest_y.to_frame('Actual'), pd.DataFrame(rf1_preds,
                   columns=['Pred']), left_index=True, right_index=True)
-#%% Plot model results
+# Plot model results
 dfplot.plot()
 
 import matplotlib.pyplot as plt
