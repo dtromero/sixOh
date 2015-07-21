@@ -35,17 +35,17 @@ del df                                      # del dataframe for memory savings
 #==============================================================================
 #%%  Reduce the number of rows to prototype quicker
 #==============================================================================
-df1 = df[df.date > '2012-01-01']    # This must be done before deleting df,
+df1 = df1[df1.date > '2012-01-01']    # This must be done before deleting df,
                                     # you can simply subset df1 on itself
 #%% Let's Look at rolling averages
 
 df1['FanDuelPts_PrevGame'] = df1.groupby('player').FanDuelPts.apply(lambda x:\
                                                             x.shift(-1))
-df1['FanDuelPts_Last3']  = df1.groupby('player').FanDuelPts_PrevDay.apply(\
+df1['FanDuelPts_Last3']  = df1.groupby('player').FanDuelPts_PrevGame.apply(\
     pd.rolling_mean, window=3)
-df1['FanDuelPts_Last10']  = df1.groupby('player').FanDuelPts_PrevDay.apply(\
+df1['FanDuelPts_Last10']  = df1.groupby('player').FanDuelPts_PrevGame.apply(\
     pd.rolling_mean, window=10)
-df1['FanDuelPts_Last30']  = df1.groupby('player').FanDuelPts_PrevDay.apply(\
+df1['FanDuelPts_Last30']  = df1.groupby('player').FanDuelPts_PrevGame.apply(\
     pd.rolling_mean, window=30)
 #==============================================================================
 #==============================================================================
